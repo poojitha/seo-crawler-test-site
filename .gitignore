@@ -25,3 +25,6 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 desktop.ini
+column-mismatches.csv
+coverage-report.md
+column-mismatches.csv
