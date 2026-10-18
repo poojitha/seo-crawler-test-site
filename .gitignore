@@ -1,0 +1,27 @@
+# Dependencies (the site itself has none, but keep tooling out of git)
+node_modules/
+
+# Output of `npm run compare` – regenerated for every crawl
+coverage-report.md
+column-mismatches.csv
+
+# Crawl exports from your crawler (compare them locally, don't commit)
+crawl.csv
+crawl-*.csv
+
+# Logs and runtime files
+*.log
+npm-debug.log*
+.npm/
+
+# Environment overrides (PORT, HOST, ALT_HOST)
+.env
+.env.*
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
