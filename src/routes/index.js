@@ -12,3 +12,4 @@ require('./mobile');
 require('./javascript');
 require('./other');
 require('./sitemaps');
+require('./stats');

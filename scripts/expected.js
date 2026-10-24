@@ -109,7 +109,8 @@ function fetchUrl(u) {
         resolveP({ status: res.statusCode, statusText: res.statusMessage, headers: res.headers, httpVersion: res.httpVersion, raw, body, ms: Date.now() - t0 });
       });
     });
-    req.on('error', (e) => resolveP({ error: /reset|hang up/i.test(e.message) ? 'No response' : e.message, ms: Date.now() - t0 }));
+    // Node reports a refused connection as an AggregateError with an empty message, so fall back to the code.
+    req.on('error', (e) => { const m = e.message || e.code || 'Connection error'; resolveP({ error: /reset|hang up/i.test(m) ? 'No response' : m, ms: Date.now() - t0 }); });
     req.setTimeout(TIMEOUT, () => { req.destroy(); resolveP({ error: 'Timeout', ms: Date.now() - t0 }); });
     req.end();
   });
@@ -184,6 +185,14 @@ async function ensureServer() {
     }
     const r = await fetchUrl(url);
     row.responseTimeMs = r.ms;
+    // The server stopped (e.g. npm run dev restarted it after a file was saved): stop instead of
+    // writing a CSV full of refused connections.
+    if (/ECONNREFUSED/.test(r.error)) {
+      console.error(`\n\nThe server at ${ORIGIN} stopped answering during the crawl (${url}). Nothing was written.\n` +
+        'If it runs with npm run dev, it restarts whenever a file is saved: avoid saving while this runs, then try again.');
+      if (child) child.kill();
+      process.exit(1);
+    }
     if (r.error) {
       Object.assign(row, { error: r.error, indexable: 'false', indexabilityReason: 'Error' });
       return;
@@ -358,8 +367,9 @@ async function ensureServer() {
     }
     a.near = { count, best, bestUrl };
   }
-  // Values that depend on who is crawling (UA / IP / request header echo pages): "*" = any value.
-  const ECHO = /\/other\/(crawler_user_agent|crawler_ip_address|crawler_request_headers)$/;
+  // Values that depend on who is crawling (UA / IP / request header echo pages) or on timing
+  // (/stats shows scan durations): "*" = any value.
+  const ECHO = /\/other\/(crawler_user_agent|crawler_ip_address|crawler_request_headers)$|^http:\/\/[^/]+\/stats$/;
   const ECHO_COLS = ['sizeBytes', 'transferredBytes', 'totalTransferredBytes', 'hash', 'title', 'titleLength', 'titlePixelWidth', 'metaDescription', 'metaDescriptionLength', 'metaDescriptionPixelWidth', 'wordCount', 'sentenceCount', 'avgWordsPerSentence', 'fleschReadingEase', 'readability', 'textRatio'];
   const edges = {};
   for (const n of nodes.values()) {

@@ -73,7 +73,7 @@ const server = http.createServer(async (req, res) => {
   // A handler that wrote/destroyed the response itself returns undefined.
   if (out !== undefined && !res.headersSent && !res.destroyed) send(req, res, out);
 
-  if (!process.env.QUIET) {
+  if (!process.env.QUIET && !req.headers['x-stats-scan']) {
     const ua = String(req.headers['user-agent'] || '-').slice(0, 40);
     console.log(`${res.statusCode} ${req.method} ${hostname} ${req.url}  ${Date.now() - t0}ms  [${ua}]`);
   }

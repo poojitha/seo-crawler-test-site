@@ -27,6 +27,7 @@ ${CATS.map(([k, label, desc]) => {
 <h2>Site-wide files</h2>
 <ul class="links">
   <li><a href="/tests">Full test catalog (every URL and its expected result)</a></li>
+  <li><a href="/stats">Site statistics (live scan of every test URL)</a></li>
   <li><a href="/robots.txt">robots.txt</a></li>
   <li><a href="/sitemap.xml">sitemap.xml (sitemap index)</a></li>
   <li><a href="/?parameter-on-hostname-root=parameter-value">Home page with a query parameter</a></li>
@@ -116,7 +117,8 @@ a{color:var(--accent)}h1{font-size:28px;line-height:1.2}.about{background:var(--
 .card span{color:var(--muted);font-size:14px}.card em{color:var(--accent);font-style:normal;font-size:13px}
 table.tests{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:24px}table.tests td,table.tests th{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
 table.tests code{word-break:break-all}footer{border-top:1px solid var(--line);padding:12px 20px;color:var(--muted);font-size:14px}
-.filler{color:var(--muted)}img{max-width:100%}`;
+.filler{color:var(--muted)}img{max-width:100%}
+.card .big{font-size:24px;color:var(--fg)}table.stats{max-width:760px}table.stats .num{text-align:right;white-space:nowrap}table.stats .barcell{width:40%}.bar{display:block;height:10px;border-radius:2px;background:var(--accent)}`;
 
 r('/css/app.css', 'Site stylesheet', 'Valid CSS file linked from every page.', '200 text/css resource.', {}, { handler: file('text/css; charset=utf-8', CSS) });
 r('/js/app.js', 'Site script', 'Valid JavaScript file.', '200 application/javascript resource.', {}, {

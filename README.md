@@ -32,7 +32,9 @@ npm run compare -- crawl.csv   # check a crawl export column by column
    - `coverage-report.md`: missing URLs grouped by how they should have been found, then a match rate per column with the rule used and mismatch examples.
    - `column-mismatches.csv`: every mismatching cell (column, URL, test, expected, actual).
 
-Regenerate `expected-results.csv` whenever you change the site. The rules the reference crawler
+Regenerate `expected-results.csv` whenever you change the site. If a server is already running on
+port 3000, the reference crawl uses it; with `npm run dev`, don't save files while it runs, because
+the restart drops connections and the crawl stops without writing anything. The rules the reference crawler
 follows are listed at the end of [CRAWL-FINDINGS.md](CRAWL-FINDINGS.md).
 
 To use another port, set `PORT` before starting:
@@ -51,6 +53,7 @@ The console logs every request with status, host, URL, time and user agent, so y
 | `http://localhost:3000/` | Start URL for the crawl |
 | `http://localhost:3000/tests` | Catalog of all tests with expected results |
 | `http://localhost:3000/tests/<category>` | One hub per category |
+| `http://localhost:3000/stats` | Live statistics: scans every test URL on each load (status codes, content types, indexability, on-page issues) |
 | `http://localhost:3000/robots.txt` | Generated robots.txt |
 | `http://localhost:3000/sitemap.xml` | Sitemap index |
 | `http://127.0.0.1:3000/` | The same server under a different host, standing in for an external domain and the m-dot mobile site |
